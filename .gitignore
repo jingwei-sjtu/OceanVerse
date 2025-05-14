@@ -1,0 +1,4 @@
+*.csv
+data/
+infer_result/
+model_pkl/

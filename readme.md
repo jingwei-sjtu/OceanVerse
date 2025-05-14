@@ -1,8 +1,10 @@
 # OceanVerse
 
-This repository contains the code implementation for the paper *OceanVerse: A Digital Twin Global Ocean Dataset for 4D Sparse Observation Reconstruction*.
+This repository contains the code implementation for the paper *OceanVerse: A Digital Twin Global Ocean Dataset for 4D Sparse Observation Reconstruction*. OceanVerse is a comprehensive dataset designed to address the challenge of reconstructing sparse ocean observation data. It integrates nearly 2 million real-world profile data points since 1900 and three sets of Earth system numerical simulation data. OceanVerse provides a novel large-scale (∼100× nodes vs. existing datasets) dataset that meets the MNAR (Missing Not at Random) condition, supporting more effective model comparison, generalization evaluation and potential advancement of scientific reconstruction architectures. The dataset and codebase are publicly available to promote further research and development in the field of AI4Ocean.
 
-![image](intro_oceanverse.png)
+<p align="center">
+  <img src="intro_oceanverse.png" alt="OceanVerse Intro" width="500"/>
+</p>
 
 
 ## Project Structure

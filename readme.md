@@ -92,13 +92,13 @@ python main.py --batch_size 512 --num_layers 1 --input_dim 8 --hidden_dim 32 --m
 #### Oxygenerator
 
 ```
-python main.py --batch_size 512 --num_layers 2 --input_dim 8 --hidden_dim 256 --model MLP --lr 1e-4 
+python main.py --batch_size 512 --num_layers 2 --input_dim 8 --hidden_dim 256 --model Oxygenerator --lr 1e-4 
 ```
 
 #### XGBoost
 
 ```
-python main_XGBoost.py --batch_size 512 --num_layers 2 --input_dim 8 --hidden_dim 256 --model MLP --lr 1e-2
+python main_XGBoost.py
 ```
 
 

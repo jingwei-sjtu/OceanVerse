@@ -5,6 +5,31 @@ import pdb
 
 from sklearn.metrics import mean_absolute_error, mean_absolute_percentage_error, mean_squared_error, r2_score
 
+def get_valid_indices(data, year, split_indices, start_year):
+	data = (~torch.isnan(data)).sum(dim = 1)
+	valid_indices = torch.nonzero(data)[:, 0]
+	split_indices = split_indices[year - start_year]
+	valid_indices = torch.tensor(list(set(valid_indices.numpy()) & set(split_indices)))
+	return valid_indices
+
+def get_valid_indices_spatial(data, year, split_indices, start_year):
+	data = (~torch.isnan(data)).sum(dim = 1)
+	valid_indices = torch.nonzero(data)[:, 0]
+	split_indices = split_indices[year - start_year]
+	valid_indices = torch.tensor(list(set(valid_indices.numpy()) & set(split_indices.numpy())))
+
+	return valid_indices
+
+
+def get_valid_indices_temporal(data, year, split_indices, start_year):
+	data = (~torch.isnan(data)).sum(dim = 1)
+	valid_indices = torch.nonzero(data)[:, 0]
+	split_indices = np.arange(0, 42491)
+	valid_indices = torch.tensor(list(set(valid_indices.numpy()) & set(split_indices)))
+	return valid_indices
+
+
+
 def custom_mean_absolute_percentage_error(y_true, y_pred, threshold=5):
     mask = y_true >= threshold
     y_true_filtered = y_true[mask]

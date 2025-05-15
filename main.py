@@ -17,28 +17,6 @@ import numpy as np
 
 
 
-def get_valid_indices(data, year, split_indices, start_year):
-	data = (~torch.isnan(data)).sum(dim = 1)
-	valid_indices = torch.nonzero(data)[:, 0]
-	split_indices = split_indices[year - start_year]
-	valid_indices = torch.tensor(list(set(valid_indices.numpy()) & set(split_indices)))
-	return valid_indices
-
-def get_valid_indices_spatial(data, year, split_indices, start_year):
-	data = (~torch.isnan(data)).sum(dim = 1)
-	valid_indices = torch.nonzero(data)[:, 0]
-	split_indices = split_indices[year - start_year]
-	valid_indices = torch.tensor(list(set(valid_indices.numpy()) & set(split_indices.numpy())))
-
-	return valid_indices
-
-
-def get_valid_indices_temporal(data, year, split_indices, start_year):
-	data = (~torch.isnan(data)).sum(dim = 1)
-	valid_indices = torch.nonzero(data)[:, 0]
-	split_indices = np.arange(0, 42491)
-	valid_indices = torch.tensor(list(set(valid_indices.numpy()) & set(split_indices)))
-	return valid_indices
 
 
 
@@ -335,16 +313,6 @@ def main():
     df['longitude'] = df['longitude'].round(1)
     df['year'] = df['year'].round(0)
     df['depth'] = df['depth'].round(2)
-    time_range = np.arange(start_year, start_year+num_years, 1)
-    longitude_range = np.arange(-179.5, 180, 1)
-    latitude_range = np.arange(-89.5, 90, 1)
-    depth_values = df['depth'].unique()
-    coordinates = [(time, depth, lat, lon) 
-                for time in time_range 
-                for depth in depth_values
-                for lat in latitude_range 
-                for lon in longitude_range 
-                ]
     try:
         all_df = pd.read_csv(f'infer_result/all_df_empty_{args.dataset}.csv')
     except:

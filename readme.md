@@ -109,8 +109,3 @@ To evaluate model performance, run the script in `evaluate.ipynb`. Make sure to 
 
 - Set the correct dataset name
 - Provide the path to the saved model predictions in the `infer_result` folder
-
-
-## Contact
-
-Bin Lu (robinlu1209@sjtu.edu.cn), Jingjing Shen (dorisshen@sjtu.edu.cn), Ze Zhao (zhaoze@sjtu.edu.cn)

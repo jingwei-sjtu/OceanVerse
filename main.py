@@ -7,6 +7,9 @@ import torch.nn as nn
 from torch.utils.data import Dataset, random_split, DataLoader
 from torch.optim.lr_scheduler import LambdaLR, StepLR
 from torch_geometric.loader import NeighborLoader
+from torch_geometric.data.data import DataEdgeAttr, DataTensorAttr
+from torch_geometric.data.storage import GlobalStorage
+
 from models import *
 from utils import *
 import os
@@ -16,10 +19,12 @@ import pandas as pd
 import numpy as np
 
 
-
-
-
-
+# Compatibility fix for newer PyTorch versions when loading PyG objects
+torch.serialization.add_safe_globals([
+    DataEdgeAttr,
+    DataTensorAttr,
+    GlobalStorage,
+])
 
 
 def baseline_train(args, model, get_valid_indices, train_indices, val_indices, start_year, num_years, dataset_path,optimizer, scheduler, device='cuda'):

@@ -213,7 +213,10 @@ def main():
     num_years = dataset_param[args.dataset]['num_years']
     start_year = dataset_param[args.dataset]['start_year']
     dataset_path = f'data/{args.dataset}/'
-
+    
+    # Ensure output directories exist
+    os.makedirs("model_pkl", exist_ok=True)
+    
     set_random_seed(args.seed)
     if args.split == 'spatial':
         indices_path = os.path.join(dataset_path, f'split/spatial_split.pt')

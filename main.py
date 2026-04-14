@@ -175,7 +175,7 @@ def oxygenerator_train(args, model, get_valid_indices, train_indices, val_indice
             with torch.no_grad():
                 batch_count = 0
                 for year in year_list:
-                    file_path = os.path.join(dataset_path, 'graph/' + str(year) + '.pt')
+                    file_path = os.path.join(dataset_path, f'{dataset_param[args.dataset]["indices"]}_graph/{str(year)}.pt')
                     data = torch.load(file_path)
                     indices = get_valid_indices(data.y, year, val_indices, start_year)
                     if len(indices) == 0:
@@ -283,7 +283,7 @@ def main():
         year_list = [num for num in range(start_year, start_year + num_years)]
         count = 0
         for year in tqdm(year_list):
-            file_path = os.path.join(dataset_path, f'{dataset_param[args.dataset]["indices"]}_graph/' + str(year) + '.pt')
+            file_path = os.path.join(dataset_path, f'{dataset_param[args.dataset]["indices"]}_graph/{str(year)}.pt')
             data = torch.load(file_path)
             test_loader = NeighborLoader(data, num_neighbors=[0], batch_size=args.batch_size * 10)
             if args.model == 'Oxygenerator':

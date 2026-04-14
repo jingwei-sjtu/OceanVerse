@@ -20,12 +20,27 @@ This repository contains the code implementation for the paper *OceanVerse: Towa
 
 ## Experiment Environment
 
-- python 3.9
+We provide two ways to set up the environment: a standard `pip`/`conda` workflow and a `uv` workflow.
+**Note:** Please make sure that the CUDA version in your environment matches the installed PyTorch and PyG extension packages. The commands below are written for the **CUDA 12.1 (`cu121`)** setup used in our current environment.  
+If you are using a different CUDA version, please replace the corresponding wheel source accordingly.
 
-- pytorch 2.1+
+### Option 1: Conda + pip
 
-- torch-geometric 2.4+
+```bash
+conda create -n OceanVerse python=3.10
+conda activate OceanVerse
 
+pip install -r requirements.txt
+pip install torch-scatter torch-sparse -f https://data.pyg.org/whl/torch-2.1.0+cu121.html
+```
+
+### Option 2: uv
+
+```bash
+uv sync
+source .venv/bin/activate
+uv pip install -p .venv/bin/python torch-scatter torch-sparse -f https://data.pyg.org/whl/torch-2.1.0+cu121.html
+```
 
 ## Data Preparation
 

@@ -177,7 +177,7 @@ python main_XGBoost.py
 
 ### Evaluate
 
-To evaluate model performance, run the script in `evaluate.ipynb`. Make sure to modify the following items in the notebook before execution:
+To evaluate model performance, run the script in `evaluate.py`. Make sure to modify the following items in the notebook before execution:
 
 - Set the correct dataset name
 - Provide the path to the saved model predictions in the `infer_result` folder

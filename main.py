@@ -213,7 +213,7 @@ def main():
     dataset_param = {'CESM2-omip1':{'num_years': 62, 'start_year': 1948},'CESM2-omip2':{'num_years': 61, 'start_year': 1958},'GFDL_ESM4':{'num_years': 95, 'start_year': 1920}}
     num_years = dataset_param[args.dataset]['num_years']
     start_year = dataset_param[args.dataset]['start_year']
-    dataset_path = f'data/{args.dataset}/'
+    dataset_path = f'data/OceanVerse/{args.dataset}/' 
     
     # Ensure output directories exist
     os.makedirs("model_pkl", exist_ok=True)

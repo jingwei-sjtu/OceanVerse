@@ -43,7 +43,7 @@ def baseline_train(args, model, get_valid_indices, train_indices, val_indices, s
 
         random.shuffle(year_list)
         for year in year_list:
-            file_path = os.path.join(dataset_path, 'graph/' + str(year) + '.pt')
+            file_path = os.path.join(dataset_path, f'{dataset_param[args.dataset]["indices"]}_graph/{str(year)}.pt')
             data = torch.load(file_path)
             indices = get_valid_indices(data.y, year, train_indices, start_year)
             train_loader = NeighborLoader(data, num_neighbors=[0], batch_size=args.batch_size, input_nodes=indices)
@@ -74,7 +74,7 @@ def baseline_train(args, model, get_valid_indices, train_indices, val_indices, s
                 year_list = val_year_list
             count = 0
             for year in tqdm(year_list):
-                file_path = os.path.join(dataset_path, 'graph/' + str(year) + '.pt')
+                file_path = os.path.join(dataset_path, f'{dataset_param[args.dataset]["indices"]}_graph/{str(year)}.pt')
                 data = torch.load(file_path)
                 indices = get_valid_indices(data.y, year, val_indices, start_year)
                 val_loader = NeighborLoader(data, num_neighbors=[0], batch_size=args.batch_size, input_nodes=indices)
@@ -121,7 +121,7 @@ def oxygenerator_train(args, model, get_valid_indices, train_indices, val_indice
             year_list = train_year_list
 
         for year in year_list:
-            file_path = os.path.join(dataset_path, 'graph/' + str(year) + '.pt')
+            file_path = os.path.join(dataset_path, f'{dataset_param[args.dataset]["indices"]}_graph/{str(year)}.pt')
             data = torch.load(file_path)
             model.train()
             indices = get_valid_indices(data.y, year, train_indices, start_year)
@@ -207,20 +207,24 @@ def main():
     args = get_args()
     device = torch.device("cuda:" + str(args.gpu) if torch.cuda.is_available() else "cpu")
     if args.seed is None: 
-        args.seed = random.randint(0, 10000)
+        args.seed = 1
     print(f"INFO: Using seed {args.seed}")
     print(args)
-    dataset_param = {'CESM2-omip1':{'num_years': 62, 'start_year': 1948},'CESM2-omip2':{'num_years': 61, 'start_year': 1958},'GFDL_ESM4':{'num_years': 95, 'start_year': 1920}}
+    dataset_param = {
+    'CESM2_omip1': {'num_years': 62, 'start_year': 1948, 'indices': 'omip1', 'graph': 'omip1', 'gt_file': 'OMIP1_do.npy'},
+    'CESM2_omip2': {'num_years': 61, 'start_year': 1958, 'indices': 'omip2', 'graph': 'omip2', 'gt_file': 'OMIP2_do.npy'},
+    'GFDL_ESM4':  {'num_years': 95, 'start_year': 1920, 'indices': 'GFDL',   'graph': 'GFDL',   'gt_file': 'GFDL_do.npy'},
+}
     num_years = dataset_param[args.dataset]['num_years']
     start_year = dataset_param[args.dataset]['start_year']
-    dataset_path = f'data/OceanVerse/{args.dataset}/' 
+    dataset_path = f'data/{args.dataset}/' 
     
     # Ensure output directories exist
     os.makedirs("model_pkl", exist_ok=True)
-    
+
     set_random_seed(args.seed)
     if args.split == 'spatial':
-        indices_path = os.path.join(dataset_path, f'split/spatial_split.pt')
+        indices_path = os.path.join(dataset_path, f'{dataset_param[args.dataset]["indices"]}_indices/spatial_split.pt')
         indices = torch.load(indices_path)
         train_indices = indices['train_indices']
         val_indices = indices['val_indices']
@@ -236,7 +240,7 @@ def main():
         val_indices = torch.arange(0, 42491)
 
     elif args.split == 'random':
-        indices_path = os.path.join(dataset_path, f'split/random_split_seed{args.seed}.pt')
+        indices_path = os.path.join(dataset_path, f'{dataset_param[args.dataset]["indices"]}_indices/random_split_seed{args.seed}.pt')
         indices = torch.load(indices_path)
         train_indices = indices['train_indices']
         val_indices = indices['val_indices']
@@ -279,7 +283,7 @@ def main():
         year_list = [num for num in range(start_year, start_year + num_years)]
         count = 0
         for year in tqdm(year_list):
-            file_path = os.path.join(dataset_path, 'graph/' + str(year) + '.pt')
+            file_path = os.path.join(dataset_path, f'{dataset_param[args.dataset]["indices"]}_graph/' + str(year) + '.pt')
             data = torch.load(file_path)
             test_loader = NeighborLoader(data, num_neighbors=[0], batch_size=args.batch_size * 10)
             if args.model == 'Oxygenerator':
@@ -346,7 +350,7 @@ def main():
 
 def get_args():
     parser = argparse.ArgumentParser(description='Oceanverse')
-    parser.add_argument('--dataset', type=str, default='CESM2-omip1', help='omip1, omip2, GFDL')
+    parser.add_argument('--dataset', type=str, default='CESM2_omip1', help='omip1, omip2, GFDL')
     parser.add_argument('--num_layers', type=int, default=2, help='Number of layers in the Transformer model')
     parser.add_argument('--batch_size', type=int, default=512, help='Batch size for training')
     parser.add_argument('--max_patience', type=int, default=10, help='Maximum patience for early stopping')

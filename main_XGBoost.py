@@ -69,7 +69,6 @@ def main():
     for year in tqdm(year_list):
         file_path = os.path.join(dataset_path, 'graph/' + str(year) + '.pt')
         data = torch.load(file_path)
-        # indices=torch.load('/home/shenjj/digital_twin/GFDL-ESM4_graph/split_indices/baseline_model_MLP_256_2_MLPsvd_all_9698.pt')
     
         indices = get_indices(data.y, year, train_indices, start_year)
         train_loader = NeighborLoader(data, num_neighbors=[0], batch_size=args.batch_size, input_nodes=indices)

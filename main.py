@@ -20,11 +20,12 @@ import numpy as np
 
 
 # Compatibility fix for newer PyTorch versions when loading PyG objects
-torch.serialization.add_safe_globals([
-    DataEdgeAttr,
-    DataTensorAttr,
-    GlobalStorage,
-])
+if hasattr(torch.serialization, "add_safe_globals"):
+    torch.serialization.add_safe_globals([
+        DataEdgeAttr,
+        DataTensorAttr,
+        GlobalStorage,
+    ])
 
 
 def baseline_train(args, model, get_valid_indices, train_indices, val_indices, start_year, num_years, dataset_path,optimizer, scheduler, device='cuda'):

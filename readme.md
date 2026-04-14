@@ -44,14 +44,39 @@ uv pip install -p .venv/bin/python torch-scatter torch-sparse -f https://data.py
 
 ## Data Preparation
 
-The dataset used in this project can be downloaded from https://huggingface.co/datasets/jingwei-sjtu/OceanVerse. After downloading, place the dataset folder under the data/ directory using the dataset name as the folder name. The expected directory structure is:
+### Dataset Structure
+
+The dataset used in this project can be downloaded from https://huggingface.co/datasets/jingwei-sjtu/OceanVerse. After downloading, place the dataset folder under the data/ directory using the dataset name as the folder name. The expected directory structure will be as follows:
 
 ```
-data/
-└── CESM2-omip1/               # Example dataset name
-    ├── split/                 # Train/validation splits in different split methods
-    ├── graph/                 # Preprocessed graph structure per time step
-    └── ground_truth/          # Ground-truth oxygen values for evaluating
+YOUR_LOCAL_DIR/
+├── CESM2_omip1/
+│   ├── omip1_indices/          # split indices of CESM2-OMIP1 (random split, temporal split and spatial split)
+│   ├── omip1_graph/            # Graph-structured data (model input)
+│   └── omip1_ground_truth/     # Ground truth of CESM2-OMIP1
+├── CESM2_omip2/
+│   ├── omip2_indices/          # split indices of CESM2-OMIP2 (random split, temporal split and spatial split)
+│   ├── omip2_graph/            # Graph-structured data (model input)
+│   └── omip2_ground_truth/     # Ground truth of CESM2-OMIP2
+├── GFDL_ESM4/
+│   ├── GFDL_indices/           # split indices of GFDL-ESM4 (random split, temporal split and spatial split)
+│   ├── GFDL_graph/             # Graph-structured data (model input)
+│   └── GFDL_ground_truth/      # Ground truth of GFDL-ESM4
+├── .gitattributes
+└── README.md
+```
+### One-Step Download
+
+```bash
+# Step 1: Install uv (skip if already installed)
+pip install uv
+
+# Step 2: Download the dataset
+uvx hf download jingwei-sjtu/OceanVerse --repo-type=dataset --local-dir 'YOUR_LOCAL_DIR'
+
+# If a proxy is required:
+HTTP_PROXY='YOUR_HTTP_PROXY' HTTPS_PROXY='YOUR_HTTPS_PROXY' \
+  uvx hf download jingwei-sjtu/OceanVerse --repo-type=dataset --local-dir 'YOUR_LOCAL_DIR'
 ```
 
 ## Basic Usage

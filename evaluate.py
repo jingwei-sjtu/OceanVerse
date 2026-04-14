@@ -8,6 +8,8 @@ from tqdm import tqdm
 # dataset = 'CESM2_omip2'
 # dataset = 'GFDL_ESM4'
 dataset = 'CESM2_omip1'
+DATA_DIR = 'OceanVerse'  # Replace with your actual download directory
+
 
 dataset_param = {
     'CESM2_omip1': {'num_years': 62, 'start_year': 1948, 'indices': 'omip1', 'graph': 'omip1', 'gt_file': 'OMIP1_do.npy'},
@@ -20,7 +22,7 @@ start_year = dataset_param[dataset]['start_year']
 year_list = list(range(start_year, start_year + num_years))
 
 ## load graph data (year-by-year .pt files)
-pwd = f'data/{dataset}/{dataset_param[dataset]["graph"]}_graph/'
+pwd = f'{DATA_DIR}/{dataset}/{dataset_param[dataset]["graph"]}_graph/'
 all_label = []
 count = 0
 for year in tqdm(year_list):
@@ -60,7 +62,7 @@ sampled_data = torch.tensor(sampled_data)
 
 ## load prediction result and ground truth
 predict_result_path = 'infer_result/your_predict_result.npy'  # TODO: update to your actual file
-ground_truth_path = f'data/{dataset}/{dataset_param[dataset]["indices"]}_ground_truth/{dataset_param[dataset]["gt_file"]}'
+ground_truth_path = f'{DATA_DIR}/{dataset}/{dataset_param[dataset]["indices"]}_ground_truth/{dataset_param[dataset]["gt_file"]}'
 
 predict_result = np.load(predict_result_path)
 ground_truth = np.load(ground_truth_path)

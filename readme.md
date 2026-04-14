@@ -65,6 +65,38 @@ YOUR_LOCAL_DIR/
 ├── .gitattributes
 └── README.md
 ```
+### Subfolder Description
+
+#### Indices (`*_indices/`)
+
+Each indices folder contains **7 split index files** (all in `.pt` format) used to partition the data:
+
+| File | Description |
+|------|-------------|
+| `random_split_seed1.pt` | Random splits of observation data into training/validation sets (7:3 ratio) with seed 1 |
+| `random_split_seed2.pt` | Random splits of observation data into training/validation sets (7:3 ratio) with seed 2 |
+| `random_split_seed3.pt` | Random splits of observation data into training/validation sets (7:3 ratio) with seed 3 |
+| `random_split_seed4.pt` | Random splits of observation data into training/validation sets (7:3 ratio) with seed 4 |
+| `random_split_seed5.pt` | Random splits of observation data into training/validation sets (7:3 ratio) with seed 5 |
+| `temporal_split.pt` | Time-based split: first 70% of years for training, remaining 30% for validation |
+| `spatial_split.pt` | Geography-based split across 5 ocean regions (Atlantic, Pacific, Indian, Polar, Enclosed Seas) in a 7:3 ratio |
+
+All index files are stored as **PyTorch tensors (`.pt`)**. They identify which spatiotemporal locations have observations and are used to construct MNAR (Missing Not at Random) masks.
+
+#### Graph (`*_graph/`)
+
+| Content | File Format | Purpose |
+|---------|-------------|---------|
+| Graph-structured data (one file per year) | `.pt` (PyTorch tensor) | Graph input for the model, containing spatiotemporal adjacency information |
+
+#### Ground Truth (`*_ground_truth/`)
+
+| Model | Filename | File Format | Description |
+|-------|----------|-------------|-------------|
+| CESM2-OMIP1 | `OMIP1_do.npy` | NumPy array (`.npy`) | Dissolved oxygen ground truth |
+| CESM2-OMIP2 | `OMIP2_do.npy` | NumPy array (`.npy`) | Dissolved oxygen ground truth |
+| GFDL-ESM4 | `GFDL_do.npy` | NumPy array (`.npy`) | Dissolved oxygen ground truth |
+
 ### One-Step Download
 
 ```bash

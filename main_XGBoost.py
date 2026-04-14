@@ -21,20 +21,24 @@ def main():
     args = get_args()
     device = torch.device("cuda:" + str(args.gpu) if torch.cuda.is_available() else "cpu")
 
-    dataset_param = {'CESM2-omip1':{'num_years': 62, 'start_year': 1948},'CESM2-omip2':{'num_years': 61, 'start_year': 1958},'GFDL_ESM4':{'num_years': 95, 'start_year': 1920}}
+    dataset_param = {
+    'CESM2_omip1': {'num_years': 62, 'start_year': 1948, 'indices': 'omip1', 'graph': 'omip1', 'gt_file': 'OMIP1_do.npy'},
+    'CESM2_omip2': {'num_years': 61, 'start_year': 1958, 'indices': 'omip2', 'graph': 'omip2', 'gt_file': 'OMIP2_do.npy'},
+    'GFDL_ESM4':  {'num_years': 95, 'start_year': 1920, 'indices': 'GFDL',   'graph': 'GFDL',   'gt_file': 'GFDL_do.npy'},
+}
     num_years = dataset_param[args.dataset]['num_years']
     start_year = dataset_param[args.dataset]['start_year']
     dataset_path = f'data/{args.dataset}/'
 
     set_random_seed(args.seed)
     if args.seed is None: 
-        args.seed = random.randint(0, 10000)
+        args.seed = 1
     print(f"INFO: Using seed {args.seed}")
     print(args)
     
 
     if args.split == 'spatial':
-        indices_path = os.path.join(dataset_path, f'split/spatial_split.pt')
+        indices_path = os.path.join(dataset_path, f'{dataset_param[args.dataset]["indices"]}_indices/spatial_split.pt')
         indices = torch.load(indices_path)
         train_indices = indices['train_indices']
         val_indices = indices['val_indices']
@@ -50,7 +54,7 @@ def main():
         val_indices = torch.arange(0, 42491)
 
     elif args.split == 'random':
-        indices_path = os.path.join(dataset_path, f'split/random_split_seed{args.seed}.pt')
+        indices_path = os.path.join(dataset_path, f'{dataset_param[args.dataset]["indices"]}_indices/random_split_seed{args.seed}.pt')
         indices = torch.load(indices_path)
         train_indices = indices['train_indices']
         val_indices = indices['val_indices']
@@ -67,7 +71,7 @@ def main():
         year_list = train_year_list
 
     for year in tqdm(year_list):
-        file_path = os.path.join(dataset_path, 'graph/' + str(year) + '.pt')
+        file_path = os.path.join(dataset_path, f'{dataset_param[args.dataset]["indices"]}_graph/{str(year)}.pt')
         data = torch.load(file_path)
     
         indices = get_indices(data.y, year, train_indices, start_year)
@@ -90,7 +94,7 @@ def main():
     if args.split == 'temporal':
         year_list = val_year_list
     for year in tqdm(year_list):
-        file_path = os.path.join(dataset_path, 'graph/' + str(year) + '.pt')
+        file_path = os.path.join(dataset_path, f'{dataset_param[args.dataset]["indices"]}_graph/{str(year)}.pt')
         data = torch.load(file_path)
         indices = get_indices(data.y, year, train_indices, start_year)
         val_loader = NeighborLoader(data, num_neighbors=[0], batch_size=args.batch_size, input_nodes=indices)
@@ -134,7 +138,7 @@ def main():
     ## inference
     for i in tqdm(range(num_years)):
         year = start_year + i
-        file_path = os.path.join(dataset_path, 'graph/' + str(year) + '.pt')
+        file_path = os.path.join(dataset_path, f'{dataset_param[args.dataset]["indices"]}_graph/{str(year)}.pt')
         data = torch.load(file_path)
         x_factor = data.x
         x_time_series = data.time_series_profile

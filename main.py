@@ -28,7 +28,7 @@ if hasattr(torch.serialization, "add_safe_globals"):
     ])
 
 
-def baseline_train(args, model, get_valid_indices, train_indices, val_indices, start_year, num_years, dataset_path,optimizer, scheduler, device='cuda'):
+def baseline_train(args, model, get_valid_indices, train_indices, val_indices, start_year, num_years, dataset_path,optimizer, scheduler, dataset_param, device='cuda'):
     criterion = args.criterion
     year_list = [num for num in range(start_year, start_year + num_years)]
     best_val_loss = 1e10
@@ -101,7 +101,7 @@ def baseline_train(args, model, get_valid_indices, train_indices, val_indices, s
                     return
     return
 
-def oxygenerator_train(args, model, get_valid_indices, train_indices, val_indices, start_year, num_years, dataset_path, optimizer, scheduler, device='cuda'):
+def oxygenerator_train(args, model, get_valid_indices, train_indices, val_indices, start_year, num_years, dataset_path, optimizer, scheduler, dataset_param, device='cuda'):
     criterion = args.criterion
     year_list = [num for num in range(start_year, start_year + num_years)]
     if args.split == 'temporal':
@@ -270,10 +270,9 @@ def main():
     break_outer = False
     year_list = [num for num in range(start_year, start_year + num_years)]
     if args.model == 'Oxygenerator':
-
-        oxygenerator_train(args, model, get_indices, train_indices, val_indices, start_year, num_years, dataset_path, optimizer, scheduler, device=device)
+        oxygenerator_train(args, model, get_indices, train_indices, val_indices, start_year, num_years, dataset_path, optimizer, scheduler, dataset_param, device=device)
     else:
-        baseline_train(args, model, get_indices, train_indices, val_indices, start_year, num_years, dataset_path, optimizer, scheduler, device=device)
+        baseline_train(args, model, get_indices, train_indices, val_indices, start_year, num_years, dataset_path, optimizer, scheduler, dataset_param, device=device)
          
     # inference
     model.load_state_dict(torch.load(f'model_pkl/baseline_model_{args.split}_{args.model}_{args.hidden_dim}_{args.num_layers}_{args.tips}_{args.seed}.pt'))
